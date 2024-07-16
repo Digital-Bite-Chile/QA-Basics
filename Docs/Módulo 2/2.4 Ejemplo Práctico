@@ -1,0 +1,370 @@
+# 2.4 Ejemplo Práctico
+
+## Implementación de Pruebas Unitarias en un Proyecto Simple
+
+En esta sección, se proporcionarán ejemplos prácticos de implementación de pruebas unitarias en diferentes contextos utilizando diversas herramientas.
+
+### Ejemplo 1: Calculadora en Java con JUnit
+
+#### Proyecto Simple: Calculadora
+
+La estructura del proyecto será la siguiente:
+
+```
+CalculadoraProyecto/
+├── src/
+│   ├── main/
+│   │   └── java/
+│   │       └── com/
+│   │           └── ejemplo/
+│   │               └── Calculadora.java
+│   └── test/
+│       └── java/
+│           └── com/
+│               └── ejemplo/
+│                   └── CalculadoraTest.java
+├── pom.xml
+```
+
+#### Clase Calculadora
+
+```java
+package com.ejemplo;
+
+public class Calculadora {
+
+    public int sumar(int a, int b) {
+        return a + b;
+    }
+
+    public int restar(int a, int b) {
+        return a - b;
+    }
+
+    public int multiplicar(int a, int b) {
+        return a * b;
+    }
+
+    public int dividir(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("El divisor no puede ser cero");
+        }
+        return a / b;
+    }
+}
+```
+
+#### Clase de Prueba CalculadoraTest
+
+```java
+package com.ejemplo;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import org.junit.Before;
+import org.junit.Test;
+
+public class CalculadoraTest {
+
+    private Calculadora calc;
+
+    @Before
+    public void setUp() {
+        calc = new Calculadora();
+    }
+
+    @Test
+    public void testSumar() {
+        int resultado = calc.sumar(2, 3);
+        assertEquals(5, resultado);
+    }
+
+    @Test
+    public void testRestar() {
+        int resultado = calc.restar(5, 3);
+        assertEquals(2, resultado);
+    }
+
+    @Test
+    public void testMultiplicar() {
+        int resultado = calc.multiplicar(2, 3);
+        assertEquals(6, resultado);
+    }
+
+    @Test
+    public void testDividir() {
+        int resultado = calc.dividir(6, 3);
+        assertEquals(2, resultado);
+    }
+
+    @Test
+    public void testDividirPorCero() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            calc.dividir(10, 0);
+        });
+    }
+}
+```
+
+### Ejemplo 2: Pruebas Unitarias en Node.js con Jest
+
+#### Proyecto Simple: Calculadora
+
+La estructura del proyecto será la siguiente:
+
+```
+CalculadoraProyecto/
+├── src/
+│   └── calculadora.js
+├── test/
+│   └── calculadora.test.js
+├── package.json
+```
+
+#### Archivo calculadora.js
+
+```javascript
+class Calculadora {
+    sumar(a, b) {
+        return a + b;
+    }
+
+    restar(a, b) {
+        return a - b;
+    }
+
+    multiplicar(a, b) {
+        return a * b;
+    }
+
+    dividir(a, b) {
+        if (b === 0) {
+            throw new Error("El divisor no puede ser cero");
+        }
+        return a / b;
+    }
+}
+
+module.exports = Calculadora;
+```
+
+#### Archivo de Prueba calculadora.test.js
+
+```javascript
+const Calculadora = require('../src/calculadora');
+
+describe('Calculadora', () => {
+    let calc;
+
+    beforeEach(() => {
+        calc = new Calculadora();
+    });
+
+    test('sumar 2 + 3 debe ser 5', () => {
+        expect(calc.sumar(2, 3)).toBe(5);
+    });
+
+    test('restar 5 - 3 debe ser 2', () => {
+        expect(calc.restar(5, 3)).toBe(2);
+    });
+
+    test('multiplicar 2 * 3 debe ser 6', () => {
+        expect(calc.multiplicar(2, 3)).toBe(6);
+    });
+
+    test('dividir 6 / 3 debe ser 2', () => {
+        expect(calc.dividir(6, 3)).toBe(2);
+    });
+
+    test('dividir por 0 debe lanzar un error', () => {
+        expect(() => calc.dividir(10, 0)).toThrow('El divisor no puede ser cero');
+    });
+});
+```
+
+#### Archivo package.json
+
+```json
+{
+  "name": "calculadora-proyecto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^26.6.3"
+  },
+  "author": "",
+  "license": "ISC"
+}
+```
+
+### Ejemplo 3: Pruebas Unitarias en SQL
+
+#### Proyecto Simple: Pruebas de Funciones SQL
+
+La estructura del proyecto será la siguiente:
+
+```
+sql/
+├── funciones.sql
+├── pruebas.sql
+```
+
+#### Archivo funciones.sql
+
+```sql
+CREATE FUNCTION sumar(a INT, b INT) RETURNS INT
+BEGIN
+    RETURN a + b;
+END;
+
+CREATE FUNCTION restar(a INT, b INT) RETURNS INT
+BEGIN
+    RETURN a - b;
+END;
+
+CREATE FUNCTION multiplicar(a INT, b INT) RETURNS INT
+BEGIN
+    RETURN a * b;
+END;
+
+CREATE FUNCTION dividir(a INT, b INT) RETURNS INT
+BEGIN
+    IF b = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El divisor no puede ser cero';
+    END IF;
+    RETURN a / b;
+END;
+```
+
+#### Archivo pruebas.sql
+
+```sql
+-- Prueba para la función sumar
+SELECT CASE WHEN sumar(2, 3) = 5 THEN 'PASSED' ELSE 'FAILED' END AS testSumar;
+
+-- Prueba para la función restar
+SELECT CASE WHEN restar(5, 3) = 2 THEN 'PASSED' ELSE 'FAILED' END AS testRestar;
+
+-- Prueba para la función multiplicar
+SELECT CASE WHEN multiplicar(2, 3) = 6 THEN 'PASSED' ELSE 'FAILED' END AS testMultiplicar;
+
+-- Prueba para la función dividir
+SELECT CASE WHEN dividir(6, 3) = 2 THEN 'PASSED' ELSE 'FAILED' END AS testDividir;
+
+-- Prueba para la excepción en la función dividir
+BEGIN
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SET @dividirPorCero = 'PASSED';
+    END;
+    SET @dividirPorCero = 'FAILED';
+    CALL dividir(10, 0);
+END;
+SELECT @dividirPorCero AS testDividirPorCero;
+```
+
+### Ejemplo 4: Pruebas Unitarias en Python con pytest
+
+#### Proyecto Simple: Calculadora
+
+La estructura del proyecto será la siguiente:
+
+```
+CalculadoraProyecto/
+├── src/
+│   └── calculadora.py
+├── test/
+│   └── test_calculadora.py
+├── requirements.txt
+```
+
+#### Archivo calculadora.py
+
+```python
+class Calculadora:
+    def sumar(self, a, b):
+        return a + b
+
+    def restar(self, a, b):
+        return a - b
+
+    def multiplicar(self, a, b):
+        return a * b
+
+    def dividir(self, a, b):
+        if b == 0:
+            raise ValueError("El divisor no puede ser cero")
+        return a / b
+```
+
+#### Archivo de Prueba test_calculadora.py
+
+```python
+import pytest
+from src.calculadora import Calculadora
+
+@pytest.fixture
+def calc():
+    return Calculadora()
+
+def test_sumar(calc):
+    assert calc.sumar(2, 3) == 5
+
+def test_restar(calc):
+    assert calc.restar(5, 3) == 2
+
+def test_multiplicar(calc):
+    assert calc.multiplicar(2, 3) == 6
+
+def test_dividir(calc):
+    assert calc.dividir(6, 3) == 2
+
+def test_dividir_por_cero(calc):
+    with pytest.raises(ValueError, match="El divisor no puede ser cero"):
+        calc.dividir(10, 0)
+```
+
+#### Archivo requirements.txt
+
+```
+pytest
+```
+
+### Análisis de Resultados
+
+#### Ejecución de Pruebas
+
+- Para Java con JUnit: `mvn test`
+- Para Node.js con Jest: `npm test`
+- Para SQL: Ejecutar `pruebas.sql` en el entorno de base de datos
+- Para Python con pytest: `pytest`
+
+#### Resultados Esperados
+
+- Todas las pruebas deben pasar si la implementación es correcta.
+- Si alguna prueba falla, se proporcionará un informe detallado con los resultados.
+
+### Mejora de Pruebas
+
+#### Aumentar la Cobertura de Pruebas
+
+- Asegurarnos de que todas las ramas del código están cubiertas por pruebas.
+- Agregar pruebas para casos
+
+ especiales y límites.
+
+#### Refactorización de Pruebas
+
+- Simplificar y mejorar la claridad de las pruebas.
+- Eliminar código duplicado utilizando métodos auxiliares.
+
+#### Automatización de Ejecución de Pruebas
+
+- Configurar la ejecución automática de pruebas en un entorno de integración continua (CI) como Jenkins, Travis CI o GitHub Actions.
+
+---

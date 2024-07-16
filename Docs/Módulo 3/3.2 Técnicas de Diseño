@@ -1,0 +1,126 @@
+# 3.2 Técnicas de Diseño
+
+Las técnicas de diseño de casos de prueba son fundamentales para asegurar una cobertura adecuada y efectiva de los requisitos del sistema. A continuación, se presentan algunas de las técnicas más comunes y cómo se aplican en la práctica.
+
+## Particionamiento de Equivalencia
+
+### Definición
+
+El particionamiento de equivalencia es una técnica de diseño de casos de prueba que divide el conjunto de datos de entrada de un software en particiones equivalentes. En cada partición, se espera que el sistema se comporte de manera similar, por lo que una prueba con un valor representativo de cada partición es suficiente.
+
+### Objetivos
+
+- Reducir el número de casos de prueba necesarios.
+- Asegurar una cobertura adecuada al probar representaciones de cada partición.
+
+### Ejemplo
+
+Supongamos que estamos probando una función de entrada de edad que acepta valores entre 0 y 120.
+
+1. **Particiones de entrada válidas:**
+   - 0-120 (ejemplo: 25)
+
+2. **Particiones de entrada inválidas:**
+   - Menor que 0 (ejemplo: -1)
+   - Mayor que 120 (ejemplo: 121)
+
+**Casos de prueba:**
+- Probar con 25 (dentro del rango válido).
+- Probar con -1 (fuera del rango válido).
+- Probar con 121 (fuera del rango válido).
+
+## Análisis de Valores Límite
+
+### Definición
+
+El análisis de valores límite es una técnica de diseño de casos de prueba que se enfoca en los valores en los límites de las particiones equivalentes. Los defectos a menudo ocurren en los límites de las particiones, por lo que probar estos límites es crucial.
+
+### Objetivos
+
+- Detectar defectos que ocurren en los bordes de las particiones de entrada.
+
+### Ejemplo
+
+Continuando con el ejemplo anterior de la entrada de edad:
+
+**Valores límite:**
+- 0 (límite inferior válido)
+- 120 (límite superior válido)
+- -1 (límite inferior inválido)
+- 121 (límite superior inválido)
+
+**Casos de prueba:**
+- Probar con 0 (límite inferior válido).
+- Probar con 120 (límite superior válido).
+- Probar con -1 (límite inferior inválido).
+- Probar con 121 (límite superior inválido).
+
+## Tablas de Decisión
+
+### Definición
+
+Las tablas de decisión son una técnica de diseño de casos de prueba que se utiliza para representar y analizar las reglas de negocio complejas y sus combinaciones posibles de entradas y salidas. Se utilizan especialmente cuando las decisiones dependen de múltiples condiciones.
+
+### Objetivos
+
+- Asegurar que todas las combinaciones posibles de condiciones y acciones se prueben.
+
+### Ejemplo
+
+Supongamos que tenemos un sistema de descuento para un supermercado con las siguientes reglas:
+- Si el cliente es miembro y compra más de $100, recibe un 10% de descuento.
+- Si el cliente no es miembro pero compra más de $200, recibe un 5% de descuento.
+- En otros casos, no hay descuento.
+
+**Tabla de decisión:**
+
+| Cliente Miembro | Compra > $100 | Compra > $200 | Descuento |
+|-----------------|---------------|---------------|-----------|
+| Sí              | Sí            | N/A           | 10%       |
+| Sí              | No            | N/A           | 0%        |
+| No              | N/A           | Sí            | 5%        |
+| No              | N/A           | No            | 0%        |
+
+**Casos de prueba:**
+- Cliente es miembro y compra $150 -> 10% de descuento.
+- Cliente es miembro y compra $50 -> 0% de descuento.
+- Cliente no es miembro y compra $250 -> 5% de descuento.
+- Cliente no es miembro y compra $50 -> 0% de descuento.
+
+## Diagramas de Estado
+
+### Definición
+
+Los diagramas de estado son una técnica de diseño de casos de prueba que se utiliza para modelar el comportamiento del sistema en términos de sus estados y transiciones entre ellos. Cada estado representa una condición o situación en la que puede estar el sistema, y las transiciones representan los eventos que provocan el cambio de estado.
+
+### Objetivos
+
+- Asegurar que todas las posibles transiciones entre estados se prueben.
+
+### Ejemplo
+
+Supongamos que estamos probando una máquina expendedora con los siguientes estados:
+- **Estado Inicial:** Esperando Moneda
+- **Estado:** Moneda Insertada
+- **Estado:** Producto Seleccionado
+- **Estado Final:** Producto Dispensado
+
+**Diagrama de estado:**
+
+```
+[Esperando Moneda] --> (Insertar Moneda) --> [Moneda Insertada]
+[Moneda Insertada] --> (Seleccionar Producto) --> [Producto Seleccionado]
+[Producto Seleccionado] --> (Dispensar Producto) --> [Producto Dispensado]
+[Producto Dispensado] --> (Finalizar) --> [Esperando Moneda]
+```
+
+**Casos de prueba:**
+- Probar la transición de "Esperando Moneda" a "Moneda Insertada" al insertar una moneda.
+- Probar la transición de "Moneda Insertada" a "Producto Seleccionado" al seleccionar un producto.
+- Probar la transición de "Producto Seleccionado" a "Producto Dispensado" al dispensar el producto.
+- Probar la transición de "Producto Dispensado" a "Esperando Moneda" al finalizar la operación.
+
+### Conclusión
+
+Estas técnicas de diseño de casos de prueba, incluyendo el particionamiento de equivalencia, el análisis de valores límite, las tablas de decisión y los diagramas de estado, ayudan a asegurar una cobertura adecuada y efectiva de los requisitos del sistema. Al utilizar estas técnicas, los probadores pueden identificar y abordar una amplia gama de escenarios y condiciones que podrían afectar la funcionalidad del software.
+

@@ -1,0 +1,215 @@
+### Parte 1: Principios de Diseño de Casos de Prueba Unitarios
+
+```markdown
+# 2.3 Diseño de Casos de Prueba
+
+## Principios de Diseño de Casos de Prueba Unitarios
+
+El diseño de casos de prueba unitarios es fundamental para asegurar la calidad del software. A continuación se presentan los principios básicos que deben guiar el diseño de estos casos de prueba.
+
+### Principios Básicos
+
+1. **Aislamiento:** 
+   Cada prueba unitaria debe ser independiente de las demás. Esto asegura que los resultados de una prueba no afecten a otra. Por ejemplo, si se prueba una función de suma, la prueba no debe depender de la ejecución de ninguna otra prueba. Utiliza mocks y stubs para simular dependencias externas y evitar efectos colaterales.
+
+2. **Repetibilidad:** 
+   Las pruebas unitarias deben producir los mismos resultados cada vez que se ejecutan, sin importar el entorno o el orden de ejecución. Esto se puede lograr asegurándose de que las pruebas no dependan de factores externos, como la red o la base de datos. Configura y limpia el estado del entorno antes y después de cada prueba.
+
+3. **Rapidez:** 
+   Las pruebas unitarias deben ser rápidas de ejecutar. Esto permite ejecutar todas las pruebas con frecuencia, facilitando la detección temprana de defectos. Evita realizar operaciones costosas como accesos a la base de datos o llamadas a servicios web en las pruebas unitarias.
+
+4. **Claridad:** 
+   Las pruebas deben ser fáciles de entender y mantener. El nombre de la prueba debe describir claramente lo que se está probando. Los casos de prueba deben ser simples y centrarse en un solo aspecto de la funcionalidad. Documenta cada prueba con comentarios que expliquen su propósito.
+
+### Ejemplo de Caso de Prueba Unitario
+
+Supongamos que tenemos una clase `Calculadora` con un método `sumar`:
+
+```java
+public class Calculadora {
+    public int sumar(int a, int b) {
+        return a + b;
+    }
+}
+```
+
+Un caso de prueba unitario para el método `sumar` podría ser:
+
+```java
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+public class CalculadoraTest {
+
+    @Test
+    public void testSumar() {
+        Calculadora calc = new Calculadora();
+        int resultado = calc.sumar(2, 3);
+        assertEquals(5, resultado);
+    }
+}
+```
+
+En este ejemplo:
+- **Aislamiento:** La prueba `testSumar` no depende de otras pruebas.
+- **Repetibilidad:** La prueba siempre dará el mismo resultado para los mismos valores de entrada.
+- **Rapidez:** La operación de suma es rápida.
+- **Claridad:** El nombre `testSumar` describe claramente el propósito de la prueba.
+
+## Buenas Prácticas
+
+### 1. Nombrado Descriptivo
+
+El nombre del caso de prueba debe ser descriptivo y reflejar claramente lo que se está probando. Un buen nombre de prueba incluye el nombre del método bajo prueba y el escenario específico que está siendo probado. Por ejemplo, `testSumarConNumerosPositivos` es un buen nombre para una prueba que verifica la funcionalidad del método `sumar` con números positivos.
+
+### 2. Configuración y Desmontaje
+
+Usa los métodos de configuración (`setup`) y desmontaje (`teardown`) para preparar el entorno de prueba y limpiar después de la ejecución de las pruebas. Esto asegura que cada prueba se ejecute en un entorno limpio y controlado. En JUnit, estos métodos se anotan con `@Before` y `@After`.
+
+```java
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+
+public class CalculadoraTest {
+
+    private Calculadora calc;
+
+    @Before
+    public void setUp() {
+        calc = new Calculadora();
+    }
+
+    @After
+    public void tearDown() {
+        calc = null;
+    }
+
+    @Test
+    public void testSumar() {
+        int resultado = calc.sumar(2, 3);
+        assertEquals(5, resultado);
+    }
+}
+```
+
+En este ejemplo:
+- **`@Before` setUp():** Se ejecuta antes de cada prueba para inicializar el objeto `Calculadora`.
+- **`@After` tearDown():** Se ejecuta después de cada prueba para limpiar el objeto `Calculadora`.
+
+### 3. Pruebas Positivas y Negativas
+
+Incluye tanto pruebas positivas (casos en los que se espera que la funcionalidad se comporte correctamente) como pruebas negativas (casos en los que se espera que la funcionalidad maneje correctamente los errores o entradas inválidas).
+
+#### Pruebas Positivas
+Pruebas que validan el comportamiento esperado del sistema con datos válidos.
+
+```java
+@Test
+public void testSumarConNumerosPositivos() {
+    int resultado = calc.sumar(2, 3);
+    assertEquals(5, resultado);
+}
+```
+
+#### Pruebas Negativas
+Pruebas que validan cómo el sistema maneja condiciones de error o datos inválidos.
+
+```java
+@Test
+public void testSumarConNumerosNegativos() {
+    int resultado = calc.sumar(-2, -3);
+    assertEquals(-5, resultado);
+}
+
+@Test(expected = IllegalArgumentException.class)
+public void testSumarConEntradasNulas() {
+    calc.sumar(null, 2);
+}
+```
+
+### 4. Uso de Mocks y Stubs
+
+Utiliza mocks y stubs para simular el comportamiento de dependencias externas, lo que permite aislar la unidad de código que se está probando. Los mocks son objetos simulados que imitan el comportamiento de objetos reales, mientras que los stubs son implementaciones mínimas de métodos que devuelven valores predefinidos.
+
+#### Ejemplo de Uso de Mocks
+
+```java
+import static org.mockito.Mockito.*;
+import org.junit.Test;
+
+public class ServicioTest {
+
+    @Test
+    public void testServicio() {
+        Dependencia dependenciaMock = mock(Dependencia.class);
+        when(dependenciaMock.obtenerDato()).thenReturn("dato");
+        
+        Servicio servicio = new Servicio(dependenciaMock);
+        String resultado = servicio.procesar();
+        
+        assertEquals("dato procesado", resultado);
+    }
+}
+```
+
+En este ejemplo:
+- **Mock:** `dependenciaMock` es un objeto simulado de la clase `Dependencia`.
+- **Stub:** `when(dependenciaMock.obtenerDato()).thenReturn("dato")` configura el mock para que devuelva "dato" cuando se llama al método `obtenerDato`.
+
+## Estrategias para la Cobertura de Código
+
+### 1. Cobertura de Línea
+
+La cobertura de línea se refiere al porcentaje de líneas de código que se ejecutan durante la ejecución de las pruebas. Para mejorar la cobertura de línea, asegúrate de que cada línea de código sea ejecutada al menos una vez en tus casos de prueba.
+
+### 2. Cobertura de Rama
+
+La cobertura de rama mide el porcentaje de ramas de decisión (if, else, switch, etc.) que se ejecutan durante las pruebas. Para lograr una buena cobertura de rama, escribe casos de prueba que cubran todas las posibles ramas de decisión en tu código.
+
+### 3. Cobertura de Camino
+
+La cobertura de camino es una medida más completa que la cobertura de línea y de rama. Mide los diferentes caminos de ejecución que se pueden tomar a través del código. Para una alta cobertura de camino, asegúrate de escribir pruebas que cubran todas las combinaciones posibles de condiciones en tu código.
+
+### Ejemplo de Estrategias de Cobertura
+
+Supongamos que tenemos el siguiente método:
+
+```java
+public int calcular(int a, int b) {
+    if (a > 0) {
+        return a + b;
+    } else {
+        return a - b;
+    }
+}
+```
+
+Para una buena cobertura de línea y de rama, escribiríamos los siguientes casos de prueba:
+
+```java
+@Test
+public void testCalcularPositivo() {
+    int resultado = calc.calcular(1, 2);
+    assertEquals(3, resultado);
+}
+
+@Test
+public void testCalcularNegativo() {
+    int resultado = calc.calcular(-1, 2);
+    assertEquals(-3, resultado);
+}
+```
+
+### Estrategias Adicionales
+
+1. **Cobertura de Condición y Decisión:**
+   Asegúrate de que cada condición booleana en una decisión se evalúe tanto a verdadero como a falso.
+
+2. **Cobertura de Condición Múltiple:**
+   Asegúrate de que todas las combinaciones posibles de condiciones se evalúen al menos una vez.
+
+3. **Cobertura de Bucles:**
+   Prueba los bucles con cero iteraciones, una iteración y múltiples iteraciones para asegurar que funcionen correctamente en todos los escenarios.
+
+---
