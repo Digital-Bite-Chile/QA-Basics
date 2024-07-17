@@ -1,0 +1,429 @@
+# 3.3 Herramientas
+
+## Selenium
+
+### ¿Qué es Selenium?
+
+Selenium es una suite de herramientas para la automatización de navegadores web que permite escribir scripts en varios lenguajes de programación, incluyendo Java, C#, Python, y más. Selenium es ampliamente utilizado para pruebas de aplicaciones web.
+
+### Configuración y Uso Básico
+
+#### Requisitos Previos
+
+- **Instalar Java Development Kit (JDK):** Asegúrate de tener Java instalado en tu máquina. Puedes descargarlo desde [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
+
+- **Instalar un IDE:** Puedes usar IDEs como Visual Studio Code, Eclipse, IntelliJ IDEA, etc. A continuación, se detallará cómo configurar Selenium en Eclipse.
+
+#### Instalación de Selenium en Eclipse
+
+1. **Descargar Eclipse:**
+   - Descarga e instala Eclipse desde [Eclipse Downloads](https://www.eclipse.org/downloads/).
+
+2. **Configurar un Proyecto Maven en Eclipse:**
+   - Abre Eclipse y selecciona `File > New > Project`.
+   - Elige `Maven Project` y selecciona `Next`.
+   - Elige una `Archetype` como `maven-archetype-quickstart` y selecciona `Next`.
+   - Completa los campos `Group Id` y `Artifact Id` y selecciona `Finish`.
+
+3. **Agregar la Dependencia de Selenium:**
+   - Abre el archivo `pom.xml` del proyecto y agrega la siguiente dependencia:
+
+   ```xml
+   <dependency>
+       <groupId>org.seleniumhq.selenium</groupId>
+       <artifactId>selenium-java</artifactId>
+       <version>3.141.59</version>
+   </dependency>
+   ```
+
+4. **Descargar WebDriver:**
+   - Descarga ChromeDriver desde [ChromeDriver Downloads](https://sites.google.com/a/chromium.org/chromedriver/downloads).
+
+5. **Escribir un Script de Prueba:**
+   - Crea un nuevo archivo Java en `src/main/java/com/ejemplo/SeleniumTest.java` y añade el siguiente código:
+
+   ```java
+   package com.ejemplo;
+
+   import org.openqa.selenium.WebDriver;
+   import org.openqa.selenium.chrome.ChromeDriver;
+   import org.openqa.selenium.By;
+
+   public class SeleniumTest {
+       public static void main(String[] args) {
+           // Configurar la ubicación del WebDriver
+           System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+           // Crear una instancia del navegador
+           WebDriver driver = new ChromeDriver();
+
+           // Navegar a una URL
+           driver.get("http://www.google.com");
+
+           // Encontrar el elemento de búsqueda por su nombre y enviar una consulta
+           driver.findElement(By.name("q")).sendKeys("Selenium WebDriver");
+
+           // Enviar el formulario de búsqueda
+           driver.findElement(By.name("q")).submit();
+
+           // Cerrar el navegador
+           driver.quit();
+       }
+   }
+   ```
+
+6. **Ejecutar el Script:**
+   - Haz clic derecho en el archivo `SeleniumTest.java` y selecciona `Run As > Java Application`.
+
+### Ejemplo Detallado de Selenium
+
+Supongamos que quieres automatizar el inicio de sesión en una página web. A continuación, se muestra un ejemplo más detallado.
+
+```java
+package com.ejemplo;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+public class LoginTest {
+    public static void main(String[] args) {
+        // Configurar la ubicación del WebDriver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+        // Crear una instancia del navegador
+        WebDriver driver = new ChromeDriver();
+
+        // Navegar a la página de inicio de sesión
+        driver.get("http://www.example.com/login");
+
+        // Encontrar los elementos de usuario y contraseña y enviar credenciales
+        WebElement username = driver.findElement(By.id("username"));
+        WebElement password = driver.findElement(By.id("password"));
+        username.sendKeys("tu_usuario");
+        password.sendKeys("tu_contraseña");
+
+        // Hacer clic en el botón de inicio de sesión
+        driver.findElement(By.id("loginButton")).click();
+
+        // Verificar que la página de inicio de sesión se ha cargado
+        String expectedUrl = "http://www.example.com/home";
+        String actualUrl = driver.getCurrentUrl();
+        if (actualUrl.equals(expectedUrl)) {
+            System.out.println("Inicio de sesión exitoso");
+        } else {
+            System.out.println("Inicio de sesión fallido");
+        }
+
+        // Cerrar el navegador
+        driver.quit();
+    }
+}
+```
+
+## Cucumber
+
+### ¿Qué es Cucumber?
+
+Cucumber es una herramienta que soporta el desarrollo dirigido por el comportamiento (BDD). Permite escribir casos de prueba en un lenguaje natural llamado Gherkin, que es legible tanto para personas técnicas como no técnicas.
+
+### Configuración y Uso Básico
+
+#### Requisitos Previos
+
+- **Instalar Java Development Kit (JDK):**
+   - Asegúrate de tener Java instalado en tu máquina. Puedes descargarlo desde [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
+
+- **Instalar un IDE:**
+   - Puedes usar IDEs como Visual Studio Code, Eclipse, IntelliJ IDEA, etc. A continuación, se detallará cómo configurar Cucumber en IntelliJ IDEA.
+
+#### Instalación de Cucumber en IntelliJ IDEA
+
+1. **Descargar IntelliJ IDEA:**
+   - Descarga e instala IntelliJ IDEA desde [IntelliJ IDEA Downloads](https://www.jetbrains.com/idea/download/).
+
+2. **Configurar un Proyecto Maven en IntelliJ IDEA:**
+   - Abre IntelliJ IDEA y selecciona `File > New > Project`.
+   - Selecciona `Maven` y completa los campos `Group Id` y `Artifact Id`. Luego, selecciona `Next` y `Finish`.
+
+3. **Agregar las Dependencias de Cucumber:**
+   - Abre el archivo `pom.xml` del proyecto y agrega las siguientes dependencias:
+
+   ```xml
+   <dependency>
+       <groupId>io.cucumber</groupId>
+       <artifactId>cucumber-java</artifactId>
+       <version>6.10.4</version>
+   </dependency>
+   <dependency>
+       <groupId>io.cucumber</groupId>
+       <artifactId>cucumber-junit</artifactId>
+       <version>6.10.4</version>
+       <scope>test</scope>
+   </dependency>
+   ```
+
+4. **Estructura del Proyecto:**
+   - Estructura del proyecto:
+
+   ```
+   CucumberProyecto/
+   ├── src/
+   │   ├── main/
+   │   │   └── java/
+   │   │       └── com/
+   │   │           └── ejemplo/
+   │   │               └── Calculator.java
+   │   └── test/
+   │       └── java/
+   │           └── com/
+   │               └── ejemplo/
+   │                   ├── RunCucumberTest.java
+   │                   ├── StepDefinitions.java
+   │                   └── features/
+   │                       └── calculator.feature
+   ├── pom.xml
+   ```
+
+### Uso Básico
+
+#### Archivo `calculator.feature`
+
+```gherkin
+Feature: Calculator
+
+  Scenario: Add two numbers
+    Given I have a calculator
+    When I add 2 and 3
+    Then the result should be 5
+```
+
+#### Archivo `Calculator.java`
+
+```java
+package com.ejemplo;
+
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+```
+
+#### Archivo `StepDefinitions.java`
+
+```java
+package com.ejemplo;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import static org.junit.Assert.assertEquals;
+
+public class StepDefinitions {
+
+    private Calculator calculator;
+    private int result;
+
+    @Given("I have a calculator")
+    public void i_have_a_calculator() {
+        calculator = new Calculator();
+    }
+
+    @When("I add {int} and {int}")
+    public void i_add_and(Integer int1, Integer int2) {
+        result = calculator.add(int1, int2);
+    }
+
+    @Then("the result should be {int}")
+    public void the_result_should_be(Integer int1) {
+        assertEquals(int1.intValue(), result);
+    }
+}
+```
+
+#### Archivo `RunCucumberTest.java`
+
+```java
+package com.ejemplo;
+
+import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(features = "src/test/java/com/ejemplo/features")
+public class RunCucumberTest {
+}
+```
+
+5. **Ejecutar el Test:**
+   - Haz clic derecho en el archivo `RunCucumberTest.java` y selecciona `Run 'RunCucumberTest'`.
+
+### Ejemplo Detallado de Cucumber
+
+Supongamos que queremos automatizar una funcionalidad de búsqueda en un sitio web. A continuación, se muestra un ejemplo más detallado.
+
+#### Archivo `search.feature`
+
+```gherkin
+Feature:
+
+ Search
+
+  Scenario: Search for a term
+    Given I am on the search page
+    When I search for "Cucumber"
+    Then I should see results related to "Cucumber"
+```
+
+#### Archivo `SearchPage.java`
+
+```java
+package com.ejemplo;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+
+public class SearchPage {
+    private WebDriver driver;
+
+    public SearchPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public void goToSearchPage() {
+        driver.get("http://www.example.com/search");
+    }
+
+    public void searchFor(String term) {
+        WebElement searchBox = driver.findElement(By.name("q"));
+        searchBox.sendKeys(term);
+        searchBox.submit();
+    }
+
+    public boolean isResultDisplayed(String term) {
+        return driver.getPageSource().contains(term);
+    }
+}
+```
+
+#### Archivo `SearchStepDefinitions.java`
+
+```java
+package com.ejemplo;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import static org.junit.Assert.assertTrue;
+
+public class SearchStepDefinitions {
+
+    private WebDriver driver;
+    private SearchPage searchPage;
+
+    @Given("I am on the search page")
+    public void i_am_on_the_search_page() {
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        searchPage = new SearchPage(driver);
+        searchPage.goToSearchPage();
+    }
+
+    @When("I search for {string}")
+    public void i_search_for(String term) {
+        searchPage.searchFor(term);
+    }
+
+    @Then("I should see results related to {string}")
+    public void i_should_see_results_related_to(String term) {
+        assertTrue(searchPage.isResultDisplayed(term));
+        driver.quit();
+    }
+}
+```
+
+## UFT (Unified Functional Testing)
+
+### ¿Qué es UFT?
+
+UFT (Unified Functional Testing), anteriormente conocido como QTP (QuickTest Professional), es una herramienta de prueba funcional de HP (ahora Micro Focus) que permite la automatización de pruebas para una amplia gama de aplicaciones, incluyendo aplicaciones web, móviles y de escritorio.
+
+### Configuración y Uso Básico
+
+#### Requisitos Previos
+
+- **Instalar UFT:**
+   - Descarga e instala UFT desde el sitio oficial de Micro Focus: [Micro Focus UFT](https://www.microfocus.com/en-us/products/uft-one/overview).
+
+#### Configuración del Proyecto
+
+1. **Crear un Nuevo Proyecto:**
+   - Abre UFT y selecciona `File > New > Test`.
+
+2. **Seleccionar el Tipo de Prueba:**
+   - Selecciona `GUI Test` para pruebas de interfaz gráfica de usuario.
+
+3. **Configurar el Entorno:**
+   - Configura el entorno de prueba seleccionando los complementos necesarios (por ejemplo, Web, API, Mobile).
+
+### Uso Básico
+
+1. **Grabar un Script de Prueba:**
+   - Haz clic en el botón `Record` para comenzar a grabar las acciones en la aplicación.
+
+2. **Añadir Checkpoints:**
+   - Durante la grabación, puedes añadir checkpoints para verificar las propiedades de los objetos en la aplicación. Esto se hace seleccionando `Insert > Checkpoint > Standard Checkpoint`.
+
+3. **Reproducir el Script de Prueba:**
+   - Después de grabar el script, haz clic en `Run` para ejecutar la prueba.
+
+4. **Analizar Resultados:**
+   - Revisa los resultados de la prueba en el reporte generado por UFT, que mostrará si las acciones y checkpoints han pasado o fallado.
+
+### Ejemplo de Script en UFT
+
+```vbscript
+' Abrir el navegador
+SystemUtil.Run "iexplore.exe", "http://www.google.com"
+
+' Escribir en el campo de búsqueda
+Browser("Google").Page("Google").WebEdit("q").Set "UFT tutorial"
+
+' Hacer clic en el botón de búsqueda
+Browser("Google").Page("Google").WebButton("Buscar con Google").Click
+
+' Verificar que la página de resultados se carga
+Browser("Google").Page("UFT tutorial - Google Search").Sync
+
+' Cerrar el navegador
+Browser("Google").Close
+```
+
+### Ejemplo Detallado de UFT
+
+Supongamos que queremos automatizar una funcionalidad de búsqueda en un sitio web. A continuación, se muestra un ejemplo más detallado.
+
+#### Paso 1: Configurar el Script de Prueba
+
+1. **Abrir el Navegador:**
+   - Utiliza `SystemUtil.Run` para abrir el navegador.
+
+2. **Escribir en el Campo de Búsqueda:**
+   - Utiliza `Browser("Google").Page("Google").WebEdit("q").Set "UFT tutorial"` para escribir en el campo de búsqueda.
+
+3. **Hacer Clic en el Botón de Búsqueda:**
+   - Utiliza `Browser("Google").Page("Google").WebButton("Buscar con Google").Click` para hacer clic en el botón de búsqueda.
+
+4. **Verificar que la Página de Resultados se Carga:**
+   - Utiliza `Browser("Google").Page("UFT tutorial - Google Search").Sync` para verificar que la página de resultados se carga.
+
+5. **Cerrar el Navegador:**
+   - Utiliza `Browser("Google").Close` para cerrar el navegador.
+
+---
